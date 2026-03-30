@@ -1,0 +1,97 @@
+const questions = [
+  {
+    q: "You wait to speak until your grammar is perfect. What is your problem?",
+    options: ["Vocabulary", "Overthinking", "Pronunciation", "Listening"],
+    answer: 1
+  },
+  {
+    q: "You always translate before speaking. What blocks you?",
+    options: ["Confidence", "Translation habit", "Grammar", "Accent"],
+    answer: 1
+  },
+  {
+    q: "You stop speaking when you make a mistake. What is the issue?",
+    options: ["Fear of mistakes", "Lack of grammar", "Low vocabulary", "Accent problem"],
+    answer: 0
+  },
+  {
+    q: "You try to make long complex sentences but get stuck. What should you do?",
+    options: ["Use simpler sentences", "Learn more grammar", "Translate better", "Speak slower"],
+    answer: 0
+  },
+  {
+    q: "You know many rules but cannot speak fluently. Why?",
+    options: ["Speaking is a skill", "You need more books", "You need more grammar", "You need subtitles"],
+    answer: 0
+  }
+];
+
+let current = 0;
+let score = 0;
+let selected = null;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion() {
+  const q = questions[current];
+  questionEl.innerText = q.q;
+  answersEl.innerHTML = "";
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.onclick = () => selectAnswer(i);
+    answersEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(i) {
+  selected = i;
+}
+
+nextBtn.onclick = () => {
+  if (selected === null) return;
+
+  if (selected === questions[current].answer) {
+    score++;
+  }
+
+  selected = null;
+  current++;
+
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+};
+
+function showResult() {
+  document.getElementById("quiz").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  let text = "";
+
+  if (score === questions.length) {
+    text = "You have a strong speaking mindset.";
+  } else if (score >= 3) {
+    text = "You are improving, but still overthinking sometimes.";
+  } else {
+    text = "You tend to overthink. Start speaking more freely.";
+  }
+
+  document.getElementById("resultText").innerText = text;
+}
+
+function restart() {
+  current = 0;
+  score = 0;
+  selected = null;
+  document.getElementById("quiz").classList.remove("hidden");
+  document.getElementById("result").classList.add("hidden");
+  loadQuestion();
+}
+
+loadQuestion();
